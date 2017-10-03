@@ -1,0 +1,28 @@
+{
+    "include": [
+        "./src/**/*"
+    ],
+    "exclude": [
+        
+    ],
+
+    "compilerOptions": {
+        "allowUnreachableCode": true,
+        "allowUnusedLabels": true,
+        "allowJs": false,
+
+        "noImplicitAny": false,
+        "noImplicitThis": true,
+        "noEmitOnError": true,
+
+        "removeComments": false,
+        "target": "es6",
+        "module": "commonjs",
+        "sourceMap": false,
+        "strict": false,
+        "declaration": true,
+        "declarationDir": "./typings",
+    
+        "outDir": "./"
+    }
+}

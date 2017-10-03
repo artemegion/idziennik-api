@@ -1,0 +1,4 @@
+src/
+.vscode
+tslint.json
+build.docs.js

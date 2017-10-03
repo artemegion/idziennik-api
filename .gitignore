@@ -1,0 +1,10 @@
+.vscode
+node_modules
+dist
+*.js
+lib
+typings
+docs
+
+!src/lib
+!src/typings
