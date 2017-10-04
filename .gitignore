@@ -1,10 +1,11 @@
 .vscode
 node_modules
 dist
-*.js
 lib
 typings
 docs
+index.js
+index.d.ts
 
 !src/lib
 !src/typings

@@ -2,3 +2,5 @@ src/
 .vscode
 tslint.json
 build.docs.js
+build.js
+clean.js
