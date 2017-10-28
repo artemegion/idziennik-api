@@ -72,12 +72,7 @@
         {
             // assign session info to variables
             session.sessionId = openSessionResponse.sessionId;
-
-            aspxAuth = {
-                viewState: openSessionResponse.viewState,
-                viewStateGenerator: openSessionResponse.viewStateGenerator,
-                eventValidation: openSessionResponse.eventValidation
-            };
+            aspxAuth = openSessionResponse.aspxAuth;
 
             // after opening session we can fetch captcha image, it will be Base64 encoded
             return idziennik.fetchCaptcha({ sessionId: session.sessionId });
