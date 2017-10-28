@@ -1,10 +1,9 @@
-.vscode
-node_modules
-dist
-lib
-typings
-index.js
+/.vscode
+/node_modules
+/dist
+/lib
+/typings
+/index.js
 index.d.ts
 
-!src/lib
-!src/typings
+!docs
