@@ -1,0 +1,290 @@
+body
+{
+    margin: 0;
+    padding: 0;
+
+    background-color: rgb(216, 222, 233);
+
+    font-family: 'Oxygen';
+    font-size: 100%;
+}
+
+h3
+{
+    margin: 0;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    padding: 0;
+
+    font-weight: 500;
+    font-size: 120%;
+}
+
+h3:first-child
+{
+    margin-top: 0;
+}
+
+header
+{
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+
+    padding-top: 15px;
+    padding-bottom: 15px;
+
+    background-color: rgb(67, 76, 94);
+}
+
+header .title
+{
+    flex-basis: auto;
+    font-size: 120%;
+}
+
+header .title a
+{
+    color:rgb(255, 255, 255);
+
+    text-decoration: none;
+}
+
+header .gh
+{
+    flex-basis: auto;
+    font-size: 100%;
+}
+
+a
+{
+    color: rgb(136, 192, 208);
+    text-decoration: none;
+}
+
+a.hidden
+{
+    display: none;
+}
+
+p
+{
+    padding: 0;
+    margin: 0;
+}
+
+nav
+{
+    margin-right: 20px;
+
+    flex-basis: auto;
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+
+nav .section-title
+{
+    font-size: 120%;
+}
+
+nav .section-title:not(:first-of-type)
+{
+    margin-top: 15px;
+}
+
+nav a.section-title
+{
+    font-size: 140%;
+}
+
+.content-container
+{
+    padding: 15px;
+
+    display: flex;
+    flex-direction: row;
+
+    justify-content: center;
+}
+
+.content
+{
+    max-width: 60vw;
+    padding: 15px;
+
+    flex-basis: 100%;
+    flex-grow: 0;
+    flex-shrink: 0;
+
+    background-color: rgb(255, 255, 255);
+}
+
+ol.inline
+{
+    margin: 0;
+    margin-top: 10px;
+    padding: 0;
+
+    list-style-position: inside;
+}
+
+ul.inline
+{
+    margin: 0;
+    padding: 0;
+
+    list-style-type: none;
+}
+
+ul.inline li::before
+{
+    content: '\25CB\20';
+}
+
+@media screen and (max-device-width: 1920px) and (min-width: 1400px) and (-webkit-min-device-pixel-ratio: 1)
+{
+    .content
+    {
+        max-width: 40vw;
+    }
+}
+
+.content .title
+{
+    display: flex;
+    flex-direction: row;
+
+    justify-content: flex-start;
+    align-items: center;
+
+    margin-bottom: 15px;
+}
+
+.content .title p
+{
+    flex-basis: auto;
+    flex-grow: 1;
+    flex-shrink: 1;
+
+    margin-left: 5px;
+
+    font-size: 120%;
+}
+
+.content .title img
+{
+    flex-basis: auto;
+    flex-grow: 0;
+    flex-shrink: 0;
+
+    height: 1.5em;
+}
+
+.content .section-title
+{
+    font-size: 120%;
+}
+
+nav ol,
+nav ul
+{
+    padding: 0;
+    margin: 0;
+    margin-top: 10px;
+    margin-bottom: 0;
+
+    list-style: none;
+}
+
+nav ol
+{
+    counter-reset: section;
+}
+
+nav ol > li::before
+{
+    counter-increment: section;
+    content: counter(section) '. ';
+}
+
+nav ol > li
+{
+    margin-top: 10px;
+}
+
+nav ul > li
+{
+    display: flex;
+    flex-direction: row;
+
+    justify-content: flex-start;
+    align-items: center;
+}
+
+nav ul > li .icon
+{
+    flex-basis: 1em;
+    flex-grow: 0;
+    flex-shrink: 0;
+
+    height: 1em;
+}
+
+nav ul > li a
+{
+    margin-left: 5px;
+
+    flex-basis: auto;
+    flex-grow: 1;
+    flex-shrink: 1;
+
+    text-decoration: none;
+}
+
+nav ul.methods > li a
+{
+    color: rgb(182, 132, 173);
+}
+
+nav ul.interfaces > li a
+{
+    color: rgb(126, 180, 178);
+}
+
+code,
+pre code
+{
+    max-width: 100%;
+
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding: 10px !important;
+
+    line-height: 140%;
+    font-family: 'Consolas', 'Ubuntu Mono', 'Courier New', 'Courier', monospace;
+    font-size: 10pt;
+
+    overflow: hidden;
+}
+
+.method
+{
+    color: rgb(182, 132, 173);
+}
+
+.interface
+{
+    color: rgb(126, 180, 178);
+}
+
+.class
+{
+    color: rgb(121, 160, 199);
+}
+
+.field
+{
+    color: rgb(163, 190, 140);
+}

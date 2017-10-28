@@ -1,14 +1,18 @@
 export interface IStudentInfo
 {
     name: string;
-
     classId: string;
-    registerId: number;
-    years: IYear[];
+    
+    years: IStudentInfo.IYear[];
 }
 
-export interface IYear
+export namespace IStudentInfo
 {
-    id: number;
-    name: string;
+    export interface IYear
+    {
+        id: number;
+        name: string;
+        
+        registerId: number;
+    }
 }

@@ -1,21 +1,30 @@
 export interface ISchedule
 {
-    lessonsTimeFrames: {
-        id: number,
-        from: string,
-        to: string
-    }[],
+    lessonsTimeFrames: ISchedule.ITimeFrame[],
 
     days: {
-        [index: number]: {
-            lessonId: number,
-            id: number,
-            color: string,
-            teacher: string,
-            name: string,
-            description: string,
-            replacementType: number,
-            classesCancelled: number
-        }[]
+        [index: number]: ISchedule.IClasses[]
+    }
+}
+
+export namespace ISchedule
+{
+    export interface ITimeFrame
+    {
+        index: number;
+        from: string;
+        to: string;
+    }
+
+    export interface IClasses
+    {
+        index: number;
+        id: number;
+        color: string;
+        teacher: string;
+        name: string;
+        description: string;
+        replacementType: number;
+        classesCancelled: number;
     }
 }

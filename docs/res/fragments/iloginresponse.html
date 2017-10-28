@@ -1,0 +1,18 @@
+<div class="title">
+    <img class="icon" src="./res/img/interface.svg" />
+    <p class="interface">ILoginResponse</p>
+</div>
+        
+<p>
+    <a href="#login" class="method">login</a> resolves with either <span class="interface">ILoginSuccessResponse</span> or <span class="interface">ILoginFailResponse</span>.
+</p>
+<br />
+
+<p class="section-title"><span class="interface">ILoginSuccessResponse</span> fields</p>
+<p>authenticated: <span class="class">true</span> - user is authenticated</p>
+<p>privateToken: <span class="class">string</span> - ASP.NET ASPXAUTH cookie</p>
+<p>bearerToken: <span class="class">string</span> - Bearer cookie</p>
+<br />
+
+<p class="section-title"><span class="interface">ILoginFailResponse</span> fields</p>
+<p>authenticated: <span class="class">false</span> - user is not authenticated</p>

@@ -1,45 +1,35 @@
-/*
-    TypObecnosci
-    0 - ferie
-    1 - usprawiedliwienie
-    2 - spóźnienie
-    3 - nieusprawiedliwione
-    4 - zwolnienie
-    5 - zajęcia nie odbyły się
-    6 - ?
-    7 - obecny
-    8 - wycieczka
-    9 - zwolniony/obecny 
-*/
 export interface IAttendance
 {
-    statistics: IAttendanceStatistics;
-    entries: IAttendanceEntry[];
+    statistics: IAttendance.IStatistics;
+    days: IAttendance.IClasses[];
 }
 
-export interface IAttendanceStatistics
+export namespace IAttendance
 {
-    cancelled: number;
-    holiday: number;
-    absence: number;
-    presence: number;
-    late: number;
-    excuse: number;
-    trip: number;
-    exempt: number;
-    exemptPresent: number;
-}
+    export interface IStatistics
+    {
+        cancelled: number;
+        holidays: number;
+        absence: number;
+        presence: number;
+        late: number;
+        excuse: number;
+        trip: number;
+        exempt: number;
+        exemptPresent: number;
+    }
 
-export interface IAttendanceEntry
-{
-    classesDate: Date;
-    classesTimeSpan: string;
-    classesIndex: number;
-    classesTopic: string;
-
-    type: number;
-    wasEdited: boolean;
-
-    teacher: string;
-    subject: string;
+    export interface IClasses
+    {
+        classesDate: Date;
+        classesTimeSpan: string;
+        classesIndex: number;
+        classesTopic: string;
+    
+        type: number;
+        wasEdited: boolean;
+    
+        teacher: string;
+        subject: string;
+    }
 }

@@ -1,0 +1,22 @@
+<div class="title">
+    <img class="icon" src="./res/img/method.svg" />
+    <p class="method">fetchAttendance</p>
+</div>
+
+<p>
+    Fetches attendance for the week contained in the <span class="field">date</span> or
+    if <span class="field">fetchFullMonth</span> is <span class="class">true</span>
+    fetches month instead of single week. May return empty list if fetching week and
+    specified date's day component is Sunday.
+</p>
+<br />
+
+<p class="section-title">Parameters</p>
+<p>session: <a href="#isession" class="interface">ISession</a> - session tokens</p>
+<p>registerId: <span class="class">number</span> - register id</p>
+<p>date: <span class="interface">Date</span> - reference date</p>
+<p>fetchFullMonth: <span class="class">boolean</span> - whether to fetch whole month or just a single week</p>
+<br />
+
+<p class="section-title">Returns</p>
+<p><span class="class">Promise&lt;<a href="#iattendance" class="interface">IAttendance</a>&gt;</span> </p>

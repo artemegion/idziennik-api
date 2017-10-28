@@ -1,12 +1,16 @@
 export interface IProposedGrades
 {
     semestersCount: number;
+    subjects: IProposedGrades.ISubject[];
+}
 
-    subjects: {
-        name: string,
-        
+export namespace IProposedGrades
+{
+    export interface ISubject
+    {
+        name: string;
         semesters: {
-            [index: number]: string
+            [index: number]: string;
         }
-    }[];
+    }
 }

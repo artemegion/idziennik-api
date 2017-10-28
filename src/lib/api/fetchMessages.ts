@@ -1,40 +1,31 @@
 import * as unirest from 'unirest';
 
 import { ISession } from '../ISession';
-import { IMessageList } from '../IMessageList';
+import { IMessage } from '../IMessage';
 
-export interface IFetchMessageListRequest
+export function fetchMessageList(session: ISession, quantityPerPage: number, page: number): Promise<IMessage[]>
 {
-    session: ISession;
-}
-
-export interface IFetchMessageListResponse
-{
-    messageList: IMessageList;
-}
-
-export function fetchMessageList(request: IFetchMessageListRequest): Promise<IFetchMessageListResponse>
-{
-    return new Promise<IFetchMessageListResponse>((resolve, reject) =>
+    return new Promise<IMessage[]>((resolve, reject) =>
     {
         unirest.post('https://iuczniowie.progman.pl/idziennik/mod_komunikator/WS_wiadomosci.asmx/PobierzListeWiadomosci')
             .headers({
                 'Accept': 'application/json, text/javascript, */*',
-                'Accept-Encoding': 'gzip, deflate, br',
+                'Accept-Encoding': 'UTF-8',
                 'Accept-Language': 'pl-PL,pl;q=0.8,en-US;q=0.6,en;q=0.4,de;q=0.2,und;q=0.2',
                 'Connection': 'keep-alive',
                 'Content-Type': 'application/json; charset=UTF-8',
-                'Cookie': `ASP.NET_SessionId_iDziennik=${request.session.sessionId}; Bearer=${request.session.bearerToken}; .ASPXAUTH=${request.session.privateToken}`,
+                'Cookie': `ASP.NET_SessionId_iDziennik=${session.sessionId}; Bearer=${session.bearerToken}; .ASPXAUTH=${session.privateToken}`,
                 'Host': 'iuczniowie.progman.pl',
                 'Origin': 'https://iuczniowie.progman.pl',
                 'Referer': 'https://iuczniowie.progman.pl/idziennik/mod_panelRodzica/Komunikator.aspx',
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.91 Safari/537.36',
                 'X-Requested-With': 'XMLHttpRequest'
             })
+            .type('application/json')
+            .encoding('UTF-8')
             .redirect(false)
             .jar(false)
-            .encoding('UTF-8')
-            .send(`{'param' : {"strona":1,"iloscNaStrone":30,"iloscRekordow":-1,"kolumnaSort":"Data_nadania","kierunekSort":1,"maxIloscZaznaczonych":0,"panelFiltrow":1,"parametryFiltrow":[{"idKolumny":"w.Typ_wiadomosci","paramWartosc":"0"}]} }`)
+            .send(`{'param' : {"strona":${page},"iloscNaStrone":${quantityPerPage},"iloscRekordow":-1,"kolumnaSort":"Data_nadania","kierunekSort":1,"maxIloscZaznaczonych":0,"panelFiltrow":1,"parametryFiltrow":[{"idKolumny":"w.Typ_wiadomosci","paramWartosc":"0"}]} }`)
             .end(response =>
             {
                 if (response.error)
@@ -43,30 +34,24 @@ export function fetchMessageList(request: IFetchMessageListRequest): Promise<IFe
                 }
                 else
                 {
-                    if (response.code === 200)
+                    if (response.status === 200)
                     {
-                        const parsedMessageList = parseMessageList(response.body.d);
-
-                        resolve({
-                            messageList: parsedMessageList
-                        });
+                        resolve(parseMessages(response.body.d));
                     }
                     else
                     {
-                        reject('err_request_not_ok');
+                        reject(new Error(`Could not fetch message list (response status ${response.status})`));
                     }
                 }
             });
 
-        function parseMessageList(rawMessageList: any): IMessageList
+        function parseMessages(rawMessages: any): IMessage[]
         {
-            const parsedMessageList: IMessageList = {
-                data: []
-            };
+            const parsedMessages: IMessage[] = [];
 
-            rawMessageList.ListK.forEach(K =>
+            rawMessages.ListK.forEach(K =>
             {
-                parsedMessageList.data.push({
+                parsedMessages.push({
                     id: K._recordId,
                     postDate: new Date(K.DataNadania),
                     sender: K.Nadawca,
@@ -75,7 +60,7 @@ export function fetchMessageList(request: IFetchMessageListRequest): Promise<IFe
                 });
             });
 
-            return parsedMessageList;
+            return parsedMessages;
         }
     });
 }

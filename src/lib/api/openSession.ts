@@ -1,12 +1,10 @@
 import * as unirest from 'unirest';
+import { IAspxAuth } from '../IAspxAuth';
 
 export interface IOpenSessionResponse
 {
     sessionId: string;
-    
-    viewState: string;
-    viewStateGenerator: string;
-    eventValidation: string;
+    aspxAuth: IAspxAuth;
 }
 
 export function openSession(): Promise<IOpenSessionResponse>
@@ -25,10 +23,10 @@ export function openSession(): Promise<IOpenSessionResponse>
             'Upgrade-Insecure-Request': '1',
             'User-Agent': 'Chrome/60 (Windows NT 10.0; Win64; x64) Mozilla/5.0 AppleWebKit/537 (KHTML, like Gecko) Safari/537'
         })
+        .encoding('UTF-8')
         .redirect(false)
         .jar(false)
-        .encoding('UTF-8')
-        .end((response) =>
+        .end(response =>
         {
             if(response.error)
             {
@@ -36,7 +34,7 @@ export function openSession(): Promise<IOpenSessionResponse>
             }
             else
             {
-                if(response.code === 200)
+                if(response.status === 200)
                 {
                     let sessionId = response.cookie('ASP.NET_SessionId_iDziennik');
     
@@ -47,14 +45,16 @@ export function openSession(): Promise<IOpenSessionResponse>
                     resolve({
                         sessionId: sessionId,
                         
-                        viewState: viewState,
-                        viewStateGenerator: viewStateGenerator,
-                        eventValidation: eventValidation
+                        aspxAuth: {
+                            viewState: viewState,
+                            viewStateGenerator: viewStateGenerator,
+                            eventValidation: eventValidation
+                        }
                     });
                 }
                 else
                 {
-                    reject('err_request_not_ok');
+                    reject(new Error(`Could not open session (response status ${response.status})`));
                 }
             }
         });

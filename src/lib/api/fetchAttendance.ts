@@ -1,44 +1,31 @@
 import * as unirest from 'unirest';
 
 import { ISession } from '../ISession';
-import { IAttendance, IAttendanceStatistics } from '../IAttendance';
+import { IAttendance } from '../IAttendance';
 
-export interface IFetchAttendanceResponse
+export function fetchAttendance(session: ISession, registerId: number, date: Date, fetchFullMonth: boolean): Promise<IAttendance>
 {
-    attendance: IAttendance;
-}
-
-export interface IFetchAttendanceRequest
-{
-    session: ISession;
-    registerId: number;
-
-    date: Date;
-    fetchFullMonth: boolean;
-}
-
-export function fetchAttendance(request: IFetchAttendanceRequest): Promise<IFetchAttendanceResponse>
-{
-    return new Promise<IFetchAttendanceResponse>((resolve, reject) =>
+    return new Promise<IAttendance>((resolve, reject) =>
     {
         unirest.post('https://iuczniowie.progman.pl/idziennik/mod_panelRodzica/obecnosci/WS_obecnosciUcznia.asmx/pobierzObecnosciUcznia')
             .headers({
                 'Accept': 'application/json, text/javascript, */*',
-                'Accept-Encoding': 'gzip, deflate, br',
+                'Accept-Encoding': 'UTF-8',
                 'Accept-Language': 'pl-PL,pl;q=0.8,en-US;q=0.6,en;q=0.4,de;q=0.2,und;q=0.2',
                 'Connection': 'keep-alive',
                 'Content-Type': 'application/json; charset=UTF-8',
-                'Cookie': `ASP.NET_SessionId_iDziennik=${request.session.sessionId}; Bearer=${request.session.bearerToken}; .ASPXAUTH=${request.session.privateToken}`,
+                'Cookie': `ASP.NET_SessionId_iDziennik=${session.sessionId}; Bearer=${session.bearerToken}; .ASPXAUTH=${session.privateToken}`,
                 'Host': 'iuczniowie.progman.pl',
                 'Origin': 'https://iuczniowie.progman.pl',
                 'Referer': 'https://iuczniowie.progman.pl/idziennik/mod_panelRodzica/Obecnosci.aspx',
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537 (KHTML, like Gecko) Chrome/60 Safari/537',
                 'X-Requested-With': 'XMLHttpRequest'
             })
+            .type('application/json')
+            .encoding('UTF-8')
             .redirect(false)
             .jar(false)
-            .encoding('UTF-8')
-            .send(`{idPozDziennika: ${request.registerId}, mc: ${request.date.getMonth()}, rok: ${request.date.getFullYear()}, dataTygodnia: ${request.fetchFullMonth ? 'null' : `'${request.date.getFullYear()}-${request.date.getMonth()}-${request.date.getDate()}'`}`)
+            .send(`{idPozDziennika: ${registerId}, mc: ${date.getMonth()}, rok: ${date.getFullYear()}, dataTygodnia: ${fetchFullMonth ? 'null' : `'${date.getFullYear()}-${date.getMonth()}-${date.getDate()}'`}`)
             .end(response =>
             {
                 if (response.error)
@@ -47,17 +34,13 @@ export function fetchAttendance(request: IFetchAttendanceRequest): Promise<IFetc
                 }
                 else
                 {
-                    if (response.code === 200)
+                    if (response.status === 200)
                     {
-                        const parsedAttendance = parseAttendance(response.body.d);
-
-                        resolve({
-                            attendance: parsedAttendance
-                        });
+                        resolve(parseAttendance(response.body.d));
                     }
                     else
                     {
-                        reject('err_request_not_ok');
+                        reject(new Error(`Could not fetch attendance (response status ${response.status}`));
                     }
                 }
             });
@@ -68,7 +51,7 @@ export function fetchAttendance(request: IFetchAttendanceRequest): Promise<IFetc
         const parsedAttendance: IAttendance = {
             statistics: {
                 cancelled: rawAttendance.Statystyki.ileBrakZajec,
-                holiday: rawAttendance.Statystyki.ileFerii,
+                holidays: rawAttendance.Statystyki.ileFerii,
                 absence: rawAttendance.Statystyki.ileNieobecnosci,
                 presence: rawAttendance.Statystyki.ileObecnosci,
                 late: rawAttendance.Statystyki.ileSpoznien,
@@ -78,12 +61,12 @@ export function fetchAttendance(request: IFetchAttendanceRequest): Promise<IFetc
                 exemptPresent: rawAttendance.Statystyki.ileZwolnionyObecny
             },
     
-            entries: []
+            days: []
         };
     
         rawAttendance.Obecnosci.forEach(Obecnosc =>
         {
-            parsedAttendance.entries.push({
+            parsedAttendance.days.push({
                 classesDate: new Date(Obecnosc.Data.split(' ')[0]),
                 classesTimeSpan: Obecnosc.OdDoGodziny,
                 classesIndex: Obecnosc.Godzina,

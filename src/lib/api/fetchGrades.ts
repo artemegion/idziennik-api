@@ -3,39 +3,29 @@ import * as unirest from 'unirest';
 import { ISession } from '../ISession';
 import { IGrades } from '../IGrades';
 
-export interface IFetchGradesRequest
+export function fetchGrades(session: ISession, registerId: number): Promise<IGrades>
 {
-    session: ISession;
-    registerId: number;
-}
-
-export interface IFetchGradesResponse
-{
-    grades: IGrades;
-}
-
-export function fetchGrades(request: IFetchGradesRequest): Promise<IFetchGradesResponse>
-{
-    return new Promise<IFetchGradesResponse>((resolve, reject) =>
+    return new Promise<IGrades>((resolve, reject) =>
     {
         unirest.post('https://iuczniowie.progman.pl/idziennik/mod_panelRodzica/oceny/WS_ocenyUcznia.asmx/pobierzOcenyUcznia')
             .headers({
                 'Accept': 'application/json, text/javascript, */*',
-                'Accept-Encoding': 'gzip, deflate, br',
+                'Accept-Encoding': 'UTF-8',
                 'Accept-Language': 'pl-PL,pl;q=0.8,en-US;q=0.6,en;q=0.4,de;q=0.2,und;q=0.2',
                 'Connection': 'keep-alive',
                 'Content-Type': 'application/json; charset=UTF-8',
-                'Cookie': `ASP.NET_SessionId_iDziennik=${request.session.sessionId}; Bearer=${request.session.bearerToken}; .ASPXAUTH=${request.session.privateToken}`,
+                'Cookie': `ASP.NET_SessionId_iDziennik=${session.sessionId}; Bearer=${session.bearerToken}; .ASPXAUTH=${session.privateToken}`,
                 'Host': 'iuczniowie.progman.pl',
                 'Origin': 'https://iuczniowie.progman.pl',
                 'Referer': 'https://iuczniowie.progman.pl/idziennik/mod_panelRodzica/Oceny.aspx',
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537 (KHTML, like Gecko) Chrome/60 Safari/537',
                 'X-Requested-With': 'XMLHttpRequest'
             })
+            .type('application/json')
+            .encoding('UTF-8')
             .redirect(false)
             .jar(false)
-            .encoding('UTF-8')
-            .send(`{idPozDziennika: ${request.registerId}}`)
+            .send(`{idPozDziennika: ${registerId}}`)
             .end(response =>
             {
                 if (response.error)
@@ -44,17 +34,13 @@ export function fetchGrades(request: IFetchGradesRequest): Promise<IFetchGradesR
                 }
                 else
                 {
-                    if (response.code === 200)
+                    if (response.status === 200)
                     {
-                        const parsedGrades = parseGrades(response.body.d);
-
-                        resolve({
-                            grades: parsedGrades
-                        });
+                        resolve(parseGrades(response.body.d));
                     }
                     else
                     {
-                        reject('err_request_not_ok');
+                        reject(new Error(`Could not fetch grades (response status ${response.status})`));
                     }
                 }
             });
@@ -62,7 +48,7 @@ export function fetchGrades(request: IFetchGradesRequest): Promise<IFetchGradesR
         function parseGrades(rawGrades: any): IGrades
         {
             var parsedGrades: IGrades = {
-                semesterCount: rawGrades.IloscSemestrow,
+                semestersCount: rawGrades.IloscSemestrow,
                 evaluationType: rawGrades.TypOceniania,
                 isGpaWeighted: rawGrades.WarSredniaOcen,
                 selectedSemester: rawGrades.WybranySemestr,
@@ -86,7 +72,7 @@ export function fetchGrades(request: IFetchGradesRequest): Promise<IFetchGradesR
                     parsedSubject.semestersGpa[i] = Przedmiot.SrednieWSemestrach[i - 1].split(' / ')[0];
                 }
 
-                for (let i = 1; i <= parsedGrades.semesterCount; i++)
+                for (let i = 1; i <= parsedGrades.semestersCount; i++)
                 {
                     parsedSubject.semesters[i] = [];
                 }

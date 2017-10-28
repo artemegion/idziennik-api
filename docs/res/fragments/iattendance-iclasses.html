@@ -1,0 +1,32 @@
+<div class="title">
+    <img class="icon" src="./res/img/interface.svg" />
+    <p class="interface">IAttendance.IClasses</p>
+</div>
+            
+<p>
+    Contains attendance info for single classes.<br /><br />
+    There are following attendance <span class="field">type</span>s:
+    <ul class="inline">
+        <li>holidays - 0</li>
+        <li>excused - 1</li>
+        <li>late - 2</li>
+        <li>absence - 3</li>
+        <li>exempt - 4</li>
+        <li>cancelled - 5</li>
+        <li>unknown (?) - 6</li>
+        <li>present - 7</li>
+        <li>trip - 8</li>
+        <li>exempt/present - 9</li>
+    </ul>
+</p>
+<br />
+
+<p class="section-title">Fields</p>
+<p>classesDate: <span class="interface">Date</span> - date</p>
+<p>classesTimeSpan: <span class="class">string</span> - the start and end time of the lesson</p>
+<p>classesIndex: <span class="class">number</span> - index of classes starting from 1</p>
+<p>classesTopic: <span class="class">string</span> - classes topic</p>
+<p>type: <span class="class">number</span> - attendance type, see above for explanation</p>
+<p>wasEdited: <span class="class">boolean</span> - was this attendance entry edited?</p>
+<p>teacher: <span class="class">string</span> - teacher name that conducted the classes</p>
+<p>subject: <span class="class">string</span> - subject</p>

@@ -1,0 +1,123 @@
+<h3>API for idziennik (iuczniowie.progman.pl/idziennik)</h3>
+<p>This is a low level NodeJS API for idziennik (iuczniowie.progman.pl/idziennik) built on top of unirest library.
+    It features Promise-based API and formats idziennik responses to more robust format.</p>
+
+<h3>Install</h3>
+<p>
+    Install from npm
+    <code class="bash" lang="bash">
+        npm install idziennik-api
+    </code>
+</p>
+
+<h3>Build</h3>
+<p>
+    You can build this module if you want to use the bleeding edge version. Although it may be unstable or have bugs it allows
+    you to use newest features before official release. You need to have
+    <a href="https://nodejs.org/">NodeJS</a> installed in order to build the module.
+    <ol class="inline">
+        <li>
+            Clone the git repository
+            <code class="bash" lang="bash">
+                git clone https://github.com/legion44/idziennik-api
+                <br /> cd idziennik-api
+            </code>
+        </li>
+
+        <li>
+            Install required modules and build idziennik-api
+            <code lang="bash">
+                npm install
+                <br /> npm run build
+            </code>
+        </li>
+    </ol>
+</p>
+
+<h3>License</h3>
+<p>
+    MIT
+    <br />
+    <br />
+    THE SOFTWARE AND SOFTWARE AUTHOR ARE IN NO WAY AFFILIATED WITH, AUTHORIZED, MAINTAINED, SPONSORED OR
+    ENDORSED BY THE WOLTERS KLUWER POLSKA SA OR ANY OF ITS AFFILIATES OR SUBSIDIARIES. THIS IS AN INDEPENDENT SOFTWARE.
+</p>
+
+<h3>General concepts of idziennik</h3>
+<p>
+    To authenticate user must provide captcha alongside credentials. Captcha is fetched as a Base64 encoded gif image.
+    To access most of the API, <span class="field">registerId</span> must be fetched first, see <a class="interface" href="#istudentinfo">IStudentInfo</a> for details.
+    The registerId is not static, it is different for every school year (even for same student!).
+</p>
+
+<h3>Example usage</h3>
+<p>
+    Below is a simple program that reads credentials from credentials.json file located in same directory, asks user for captcha
+    and prints student info. Note that, for simplicity, this example lacks error checking and contains only
+    absolutely needed code.
+    <pre><code class="javascript" lang="javascript">
+        const idziennik = require('idziennik-api');
+        const readline = require('readline');
+        const fs = require('fs');
+
+        // read credentials from file and parse it to JSON
+        const credentials = JSON.parse(fs.readFileSync('./credentials.json'));
+
+        // these variables will be used to store session data
+        var session = {};
+        var aspxAuth = {};
+
+        idziennik.openSession()
+        .then(openSessionResponse =>
+        {
+            // assign session info to variables
+            session.sessionId = openSessionResponse.sessionId;
+
+            aspxAuth = {
+                viewState: openSessionResponse.viewState,
+                viewStateGenerator: openSessionResponse.viewStateGenerator,
+                eventValidation: openSessionResponse.eventValidation
+            };
+
+            // after opening session we can fetch captcha image, it will be Base64 encoded
+            return idziennik.fetchCaptcha({ sessionId: session.sessionId });
+        })
+        .then(fetchCaptchaResponse =>
+        {
+            // ask user to enter captcha
+            readline.question(fetchCaptchaResponse.captchaBase64 + ': ', answer =>
+            {
+                credentials.captcha = answer;
+
+                idziennik.login({ sessionId: session.sessionId, aspxAuth: aspxAuth, credentials: credentials })
+                .then(loginResponse =>
+                {
+                    if(loginResponse.authenticated)
+                    {
+                        // if successful, response will contains tokens needed to use rest of the API
+                        session.bearerToken = loginResponse.bearerToken;
+                        session.privateToken = loginResponse.privateToken;
+
+                        // if login is ok, we return fetch promise
+                        return idziennik.fetchStudentInfo({ session: session });
+                    }
+                    else
+                    {
+                        // if login failed, we return promise that is rejected, so code in following then() will not be executed
+                        return Promise.reject('Invalid credentials!');
+                    }
+                })
+                .then(studentInfo =>
+                {
+                    // should print student info to console
+                    console.dir(studentInfo);
+                })
+                .catch(reason =>
+                {
+                    // will print 'Invalid credentials!' to console
+                    console.error(reason);
+                });
+            });
+        });
+    </code></pre>
+</p>

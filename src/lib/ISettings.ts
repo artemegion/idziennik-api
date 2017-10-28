@@ -1,13 +1,16 @@
 export interface ISettings
 {
     id: number,
-    email: IEmailSettings;
+    email: ISettings.IEmail;
 }
 
-export interface IEmailSettings
+export namespace ISettings
 {
-    announcements: string;
-    grades: string;
-    tests: string;
-    notices: string;
+    export interface IEmail
+    {
+        announcements: string;
+        grades: string;
+        tests: string;
+        notices: string;
+    }
 }
