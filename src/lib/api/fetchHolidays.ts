@@ -3,7 +3,7 @@ import * as unirest from 'unirest';
 import { ISession } from '../ISession';
 import { IHolidays } from '../IHolidays';
 
-export function fetchHolidays(session: ISession): Promise<IHolidays[]>
+export function fetchHolidays(session: ISession, registerId: number): Promise<IHolidays[]>
 {
     return new Promise<IHolidays[]>((resolve, reject) =>
     {
@@ -25,7 +25,7 @@ export function fetchHolidays(session: ISession): Promise<IHolidays[]>
             .encoding('UTF-8')
             .redirect(false)
             .jar(false)
-            .send(`{'param' : {"strona":1,"iloscNaStrone":100,"iloscRekordow":-1,"kolumnaSort":"Data_od","kierunekSort":0,"maxIloscZaznaczonych":0,"panelFiltrow":0,"parametryFiltrow":null}, idP :'${request.registerId}' }`)
+            .send(`{'param' : {"strona":1,"iloscNaStrone":100,"iloscRekordow":-1,"kolumnaSort":"Data_od","kierunekSort":0,"maxIloscZaznaczonych":0,"panelFiltrow":0,"parametryFiltrow":null}, idP :'${registerId}' }`)
             .end(response =>
             {
                 if (response.error)
