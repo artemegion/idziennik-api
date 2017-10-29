@@ -33,7 +33,7 @@ function fetchFragment(id)
         }
 
         let req = new XMLHttpRequest();
-        req.open('GET', './res/fragments/' + id + '.html', true);
+        req.open('GET', 'https://legion44.github.io/idziennik-api/res/fragments/' + id + '.html', true);
     
         req.addEventListener('readystatechange', function(ev)
         {
@@ -43,14 +43,14 @@ function fetchFragment(id)
     
                 document.querySelectorAll('code[lang="javascript"]').forEach(function(elem)
                 {
-                    elem.innerText = js_beautify(elem.innerText, {
+                    elem.innerHTML = js_beautify(elem.innerHTML, {
                         indent_size: 4,
-                        indent_char: ' ',
+                        indent_char: '&nbsp;',
                         indent_scripts: 'normal',
                         brace_style: 'expand'
                     });
                 });
-                
+
                 document.querySelectorAll('code').forEach(function(code)
                 {
                     hljs.highlightBlock(code);
