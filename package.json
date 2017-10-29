@@ -1,7 +1,7 @@
 {
     "name": "idziennik-api",
     "description": "NodeJS API for iuczniowie.progman.pl/idziennik",
-    "version": "1.0.8",
+    "version": "2.0.0",
     "scripts": {
         "build": "node ./build.js"
     },
