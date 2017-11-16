@@ -3,7 +3,7 @@ import * as unirest from 'unirest';
 import { ISession } from '../ISession';
 import { IMessage } from '../IMessage';
 
-export function fetchMessageList(session: ISession, quantityPerPage: number, page: number): Promise<IMessage[]>
+export function fetchMessages(session: ISession, quantityPerPage: number, page: number): Promise<IMessage[]>
 {
     return new Promise<IMessage[]>((resolve, reject) =>
     {
