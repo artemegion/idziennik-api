@@ -19,7 +19,7 @@ export * from './lib/api/fetchCaptcha';
 export * from './lib/api/fetchGrades';
 export * from './lib/api/fetchHolidays';
 export * from './lib/api/fetchMessages';
-export * from './lib/api/fetchMessageDetails';
+export * from './lib/api/fetchMessage';
 export * from './lib/api/fetchProposedGrades';
 export * from './lib/api/fetchSchedule';
 export * from './lib/api/fetchSettings';
