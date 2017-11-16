@@ -61,12 +61,12 @@ export function fetchAttendance(session: ISession, registerId: number, date: Dat
                 exemptPresent: rawAttendance.Statystyki.ileZwolnionyObecny
             },
     
-            days: []
+            classes: []
         };
     
         rawAttendance.Obecnosci.forEach(Obecnosc =>
         {
-            parsedAttendance.days.push({
+            parsedAttendance.classes.push({
                 classesDate: new Date(Obecnosc.Data.split(' ')[0]),
                 classesTimeSpan: Obecnosc.OdDoGodziny,
                 classesIndex: Obecnosc.Godzina,

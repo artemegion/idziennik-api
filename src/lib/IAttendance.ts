@@ -1,7 +1,7 @@
 export interface IAttendance
 {
     statistics: IAttendance.IStatistics;
-    days: IAttendance.IClasses[];
+    classes: IAttendance.IClasses[];
 }
 
 export namespace IAttendance
