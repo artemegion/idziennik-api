@@ -5,7 +5,7 @@ const gulp = require('gulp'),
 
 gulp.task('build', ['build-typescript'], function()
 {
-
+    
 });
 
 gulp.task('build-typescript', function()
