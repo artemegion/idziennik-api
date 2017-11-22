@@ -79,7 +79,7 @@ export function fetchGrades(session: ISession, registerId: number): Promise<IGra
 
                 Przedmiot.Oceny.forEach(Ocena =>
                 {
-                    let parsedGrade = {
+                    let parsedGrade: IGrades.IGrade = {
                         issuedDate: Date.parse(Ocena.Data_wystaw),
                         issuedBy: Ocena.Wystawil,
                         countsForGpa: Ocena.DoSredniej,

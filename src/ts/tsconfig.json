@@ -15,14 +15,15 @@
         "noImplicitThis": true,
         "noEmitOnError": true,
 
+        "strict": true,
+        
+        "sourceMap": false,
         "removeComments": false,
+        "experimentalDecorators": false,
+        
         "target": "es6",
         "module": "commonjs",
-        "sourceMap": false,
-        "strict": false,
-        "declaration": true,
-        "declarationDir": "./typings",
-    
-        "outDir": "./"
+        
+        "declaration": true
     }
 }

@@ -65,42 +65,41 @@ export function login(sessionId: string, aspxAuth: IAspxAuth, credentials: ICred
                 {
                     if(response.status === 200)
                     {
-                        let spanErrorMessage = /id="spanErrorMessage".*?>(.+)</.exec(response.body)[1];
-
-                        if(spanErrorMessage)
+                        let spanErrorMessage = /id="spanErrorMessage".*?>(.+)</.exec(response.body);
+                        if(spanErrorMessage === null || spanErrorMessage[1] === null)
                         {
-                            if(/kodu/.test(spanErrorMessage))
-                            {
-                                resolve({
-                                    authenticated: false,
-                                    error: 'captcha'
-                                } as ILoginFailResponse);
-                            }
-                            else if(/hasło/.test(spanErrorMessage))
-                            {
-                                resolve({
-                                    authenticated: false,
-                                    error: 'credentials'
-                                } as ILoginFailResponse);
-                            }
-                            else if(/szkoły/.test(spanErrorMessage))
-                            {
-                                resolve({
-                                    authenticated: false,
-                                    error: 'schoolName'
-                                } as ILoginFailResponse);
-                            }
-                            else
-                            {
-                                resolve({
-                                    authenticated: false,
-                                    error: 'unknown'
-                                } as ILoginFailResponse);
-                            }
+                            reject('Could not login (authentication error message is empty)');
                         }
                         else
                         {
-                            reject(new Error('Could not login, authentication failed, could not retrieve error message'));
+                                if(/kodu/.test(spanErrorMessage[1]))
+                                {
+                                    resolve({
+                                        authenticated: false,
+                                        error: 'captcha'
+                                    } as ILoginFailResponse);
+                                }
+                                else if(/hasło/.test(spanErrorMessage[1]))
+                                {
+                                    resolve({
+                                        authenticated: false,
+                                        error: 'credentials'
+                                    } as ILoginFailResponse);
+                                }
+                                else if(/szkoły/.test(spanErrorMessage[1]))
+                                {
+                                    resolve({
+                                        authenticated: false,
+                                        error: 'schoolName'
+                                    } as ILoginFailResponse);
+                                }
+                                else
+                                {
+                                    resolve({
+                                        authenticated: false,
+                                        error: 'unknown'
+                                    } as ILoginFailResponse);
+                                }
                         }
                     }
                     else if(response.status >= 300 && response.status <= 307)

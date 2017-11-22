@@ -6,7 +6,7 @@
         "build": "gulp"
     },
     "private": false,
-    "main": "index.js",
+    "main": "dist/index.js",
     "license": "MIT",
     "repository": {
         "type": "git",
