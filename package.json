@@ -1,7 +1,7 @@
 {
     "name": "idziennik-api",
     "description": "NodeJS API for iuczniowie.progman.pl/idziennik",
-    "version": "2.0.1",
+    "version": "2.0.2",
     "scripts": {
         "build": "node ./build.js"
     },
@@ -16,8 +16,8 @@
         "unirest": "^0.5.1"
     },
     "devDependencies": {
-        "@types/node": "^8.0.46",
-        "@types/request": "^2.0.6",
-        "typescript": "~2.5.2"
+        "@types/node": "^8.0.53",
+        "@types/request": "^2.0.8",
+        "typescript": "^2.6.1"
     }
 }
